@@ -46,19 +46,32 @@ To update to the latest version:
 dotnet tool update -g dotnet-conventions
 ```
 
+## Versioning
+
+Package versions are calculated automatically by [GitVersion](https://gitversion.net/) from git history and tags — there is no `<Version>` property in the csproj and no manual version parameter anywhere.
+
+- **Release versions** (e.g. `1.5.0`) are published from `main` or `release/*` branches.
+- **Prerelease versions** (e.g. `1.5.0-my-feature.3`) are published from any other branch; the branch name becomes the prerelease label.
+- **Version bumps** default to patch. Include `+semver: minor` or `+semver: major` in a commit message (or a squash-merge PR title) to bump minor or major instead.
+
+The rules live in [`GitVersion.yml`](GitVersion.yml). `gitversion.tool` is pinned in [`.config/dotnet-tools.json`](.config/dotnet-tools.json) and restored via `dotnet tool restore`. The [`nuget-publish`](.github/workflows/nuget-publish.yml) workflow runs GitVersion, passes the computed version into `dotnet pack` via `-p:Version=...`, publishes to nuget.org, and finally creates and pushes the matching git tag.
+
 ## Local development
 
 From the repository root:
 
 ```bash
+dotnet tool restore
+dotnet dotnet-gitversion            # prints the calculated version for your current branch
 dotnet run --project src/DotnetConventions -- apply
 dotnet run --project src/DotnetConventions -- verify
 ```
 
-Pack locally:
+Pack locally with a GitVersion-derived version:
 
 ```bash
-dotnet pack src/DotnetConventions -c Release -o ./artifacts
+SEM_VERSION=$(dotnet dotnet-gitversion /showvariable SemVer)
+dotnet pack src/DotnetConventions -c Release -p:Version=$SEM_VERSION -o ./artifacts
 ```
 
 ## License

@@ -10,7 +10,6 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>dotnet-conventions</ToolCommandName>
     <PackageId>dotnet-conventions</PackageId>
-    <Version>0.1.0</Version>
 
     <Authors>Georg Pfeiffer</Authors>
     <Company>Georg Pfeiffer</Company>

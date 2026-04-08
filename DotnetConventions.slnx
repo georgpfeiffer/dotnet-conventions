@@ -1,13 +1,17 @@
 <Solution>
   <Folder Name="/.common/">
+    <File Path=".config/dotnet-tools.json" />
     <File Path=".editorconfig" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Build.targets" />
+    <File Path="GitVersion.yml" />
+    <File Path="global.json" />
     <File Path="LICENSE" />
+    <File Path="nuget.config" />
     <File Path="README.md" />
   </Folder>
   <Folder Name="/.github/">
-    <File Path=".github/workflows/release.yml" />
+    <File Path=".github/workflows/nuget-publish.yml" />
   </Folder>
   <Project Path="src/DotnetConventions/DotnetConventions.csproj" />
 </Solution>
