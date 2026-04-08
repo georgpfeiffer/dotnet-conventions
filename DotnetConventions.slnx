@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/.common/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/.github/">
+    <File Path=".github/workflows/release.yml" />
+  </Folder>
+  <Project Path="src/DotnetConventions/DotnetConventions.csproj" />
+</Solution>
