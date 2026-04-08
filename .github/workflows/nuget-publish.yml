@@ -1,4 +1,5 @@
 name: nuget-publish
+run-name: ${{ github.ref_name }}.${{ github.run_number }}
 
 on:
   workflow_dispatch:
@@ -7,38 +8,8 @@ permissions:
   contents: write
 
 jobs:
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 10.0.x
-
-      - name: Restore dotnet tools
-        run: dotnet tool restore
-
-      - name: Run GitVersion
-        run: |
-          dotnet dotnet-gitversion /output json
-          SEM_VERSION=$(dotnet dotnet-gitversion /showvariable SemVer)
-          echo "SEM_VERSION=$SEM_VERSION" >> "$GITHUB_ENV"
-          echo "Calculated SEM_VERSION: $SEM_VERSION"
-
-      - name: Build
-        run: dotnet build --configuration Debug
-
-      # no test step yet - add `dotnet test` here once a test project exists
-
   pack:
     name: Pack & Publish
-    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -57,22 +28,10 @@ jobs:
       - name: Run GitVersion
         run: |
           dotnet dotnet-gitversion /output json
-          SEM_VERSION=$(dotnet dotnet-gitversion /showvariable SemVer)
-          FULL_SEM_VER=$(dotnet dotnet-gitversion /showvariable FullSemVer)
-          NUGET_V2=$(dotnet dotnet-gitversion /showvariable NuGetVersionV2)
-          MMP=$(dotnet dotnet-gitversion /showvariable MajorMinorPatch)
-          PRERELEASE_LABEL=$(dotnet dotnet-gitversion /showvariable PreReleaseLabel)
-          BRANCH_NAME=$(dotnet dotnet-gitversion /showvariable BranchName)
-          echo "SEM_VERSION=$SEM_VERSION" >> "$GITHUB_ENV"
-          echo "SEM_VERSION:           $SEM_VERSION"
-          echo "FullSemVer:            $FULL_SEM_VER"
-          echo "NuGetVersionV2:        $NUGET_V2"
-          echo "MajorMinorPatch:       $MMP"
-          echo "PreReleaseLabel:       $PRERELEASE_LABEL"
-          echo "BranchName:            $BRANCH_NAME"
+          echo "SEM_VERSION=$(dotnet dotnet-gitversion /showvariable SemVer)" >> "$GITHUB_ENV"
 
       - name: Build (Release)
-        run: dotnet build src/DotnetConventions/DotnetConventions.csproj --configuration Release --verbosity minimal -p:Version=${{ env.SEM_VERSION }}
+        run: dotnet build --configuration Release --verbosity minimal
 
       - name: Pack
         run: >
@@ -86,7 +45,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: nupkg
-          path: ./artifacts/*.*nupkg
+          path: ./artifacts/*.nupkg
 
       - name: Push to nuget.org
         run: dotnet nuget push "./artifacts/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
@@ -96,4 +55,3 @@ jobs:
           set -e
           git tag "$SEM_VERSION"
           git push origin "$SEM_VERSION"
-          echo "Git tag '$SEM_VERSION' pushed successfully"
