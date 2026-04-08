@@ -412,3 +412,5 @@ dotnet_diagnostic.CA1848.severity = none
 dotnet_diagnostic.CA1716.severity = none
 #CA1863: Use 'CompositeFormat'
 dotnet_diagnostic.CA1863.severity = none
+#CA1873: Avoid potentially expensive logging --> same rationale as CA1848
+dotnet_diagnostic.CA1873.severity = none
