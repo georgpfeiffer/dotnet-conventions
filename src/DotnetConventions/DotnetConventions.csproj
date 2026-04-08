@@ -31,8 +31,8 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Templates\.editorconfig.template" LogicalName="Templates.editorconfig" />
-    <EmbeddedResource Include="Templates\Directory.Build.props" LogicalName="Templates.DirectoryBuildProps" />
-    <EmbeddedResource Include="Templates\Directory.Build.targets" LogicalName="Templates.DirectoryBuildTargets" />
+    <EmbeddedResource Include="Templates\Directory.Build.props.template" LogicalName="Templates.DirectoryBuildProps" />
+    <EmbeddedResource Include="Templates\Directory.Build.targets.template" LogicalName="Templates.DirectoryBuildTargets" />
   </ItemGroup>
 
   <ItemGroup>
